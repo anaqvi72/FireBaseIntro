@@ -1,4 +1,5 @@
-import 'package:create_social/widgets/loading.dart';
+import 'package:create_social/forms/loginform.dart';
+import 'package:create_social/forms/registerform.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -19,84 +20,9 @@ class _AuthState extends State<Authentication> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Authentication Basics"),
-      ),
-      body: loading
-          ? const Loading()
-          : Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextFormField(
-                    controller: _email,
-                    decoration: InputDecoration(labelText: "Email"),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Email cannot be empty";
-                      }
-                      if (!value.contains('@')) {
-                        return "Email is in the wrong format";
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: _password,
-                    decoration: InputDecoration(labelText: "Password"),
-                    obscureText: true,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return "Password cannot be empty";
-                      }
-                      if (value.length < 7) {
-                        return "Password to short";
-                      }
-                      return null;
-                    },
-                  ),
-                  OutlinedButton(onPressed: login, child: Text("LOGIN")),
-                  OutlinedButton(
-                      onPressed: () {
-                        setState(() {
-                          register();
-                        });
-                      },
-                      child: Text("REGISTER")),
-                  OutlinedButton(
-                      onPressed: () {}, child: Text("FORGOT PASSWORD")),
-                ],
-              ),
-            ),
-    );
-  }
-
-  Future<void> register() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        var registerResponse = await _auth.createUserWithEmailAndPassword(
-            email: _email.text, password: _password.text);
-      } catch (e) {}
-      setState(() {
-        loading = true;
-      });
-    }
-  }
-
-  void login() {
-    if (_formKey.currentState!.validate()) {
-      _auth
-          .signInWithEmailAndPassword(
-              email: _email.text, password: _password.text)
-          .whenComplete(() => setState(() {
-                loading = false;
-                _password.clear();
-              }));
-      setState(() {
-        loading = true;
-      });
-    }
+        appBar: AppBar(
+          title: Text("Authentication Basics"),
+        ),
+        body: const LoginForm());
   }
 }
